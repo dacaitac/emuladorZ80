@@ -36,6 +36,7 @@ public class Procesador {
 
     public int desicion;
     public int target;
+    public int target2;
 
     //fin de ejecucion
     public boolean halt=false;
@@ -56,12 +57,12 @@ public class Procesador {
 
     public void run(){
         while(halt=!true){
-            this.execute();
+            this.execute(desicion, target,target2);
         }
 
     }
 
-    public void execute(){
+    public void execute(int desicion, int target,int target2){
         //TODO fetch
         int output;
         switch (desicion){// fin del programa
@@ -69,9 +70,38 @@ public class Procesador {
                 halt=true;
                 break;
             //add
-            //adc
+                //memoria
+            case 24:
+                output= ALU.suma(reg_8[A],mem.get(target));
+                if(output<0){F[S]=0;};
+                break;
+                //registro
+            case 25:
+                output= ALU.suma(reg_8[A],reg_8[target]);
+                if(output<0){F[S]=0;};
+                break;
+                //numero
+            case 26:
+                output= ALU.suma(reg_8[A],target);
+                if(output<0){F[S]=0;};
+                break;
+
             //sub
-            //sbc
+                //memoria
+            case 27:
+                output= ALU.resta(reg_8[A],mem.get(target));
+                if(output<0){F[S]=0;};
+                break;
+                //registro
+            case 28:
+                output= ALU.resta(reg_8[A],reg_8[target]);
+                if(output<0){F[S]=0;};
+                break;
+                //numero
+            case 29:
+                output= ALU.resta(reg_8[A],target);
+                if(output<0){F[S]=0;};
+                break;
             //and
             case 3:
                 output= ALU.and(this.reg_8[A],mem.get(target));
@@ -213,7 +243,28 @@ public class Procesador {
             //reset
 
             //jp
+            case 30:
+                if (reg_8[A] == 0){
+                    reg_16[PC] = target;
+                }
+                break;
+            case 31:
+                if (reg_8[A] > 0){
+                    reg_16[PC] = target;}
+                    break;
+
             //ld
+                //registro numero
+            case 33:
+                reg_8[target]=reg_8[target2];
+                break;
+                //registro memoria
+            case 34:
+                reg_8[target]=mem.get(target2);
+                break;
+                //registro registro
+            case 32:
+
             //push
             //pop
 
