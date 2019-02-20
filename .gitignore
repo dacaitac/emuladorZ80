@@ -1,2 +1,7 @@
 /.metadata/
 Z80/out
+*.swp
+Z80/.idea/
+Z80/Z80.iml
+microprocesadoZ80_guia/.idea/
+microprocesadoZ80_guia/microprocesadoZ80_guia.iml
