@@ -41,22 +41,39 @@ public class Procesador {
     //fin de ejecucion
     public boolean halt=false;
     //memoria
-    public ArrayList<Integer> mem;
+    public int[] mem;
     public Port port;
 
     public Procesador(int[]data){
-        for (int x:data) {
-            mem.add(x);
-        }
+//        for (int x:data) {
+//            mem.add(x);
+//        }
+        this.mem= data;
         this.reg_8 = new int[14];
         this.reg_16 =  new int[4];
         this.F = new int[7];
         this.port= new Port();
+        reg_16[PC]=0;
+    }
+    private void fetch(){
+        if (reg_16[PC]+3<mem.length){
+            desicion = mem[reg_16[PC]] ;
+            target = mem[reg_16[PC]+1];
+            target2 = mem[reg_16[PC]+2];
+            reg_16[PC] += 3;
+        }else{
+            desicion =-1;
+            target =0;
+            target2 = 0;
+
+        }
+
 
     }
 
     public void run(){
         while(halt=!true){
+            this.fetch();
             this.execute(desicion, target,target2);
         }
 
@@ -70,102 +87,102 @@ public class Procesador {
                 halt=true;
                 break;
             //add
-                //memoria
+            //memoria
             case 24:
-                output= ALU.suma(reg_8[A],mem.get(target));
+                output= ALU.suma(reg_8[A],Memoria.get(target));
                 if(output<0){F[S]=0;};
                 break;
-                //registro
+            //registro
             case 25:
                 output= ALU.suma(reg_8[A],reg_8[target]);
                 if(output<0){F[S]=0;};
                 break;
-                //numero
+            //numero
             case 26:
                 output= ALU.suma(reg_8[A],target);
                 if(output<0){F[S]=0;};
                 break;
 
             //sub
-                //memoria
+            //memoria
             case 27:
-                output= ALU.resta(reg_8[A],mem.get(target));
+                output= ALU.resta(reg_8[A],Memoria.get(target));
                 if(output<0){F[S]=0;};
                 break;
-                //registro
+            //registro
             case 28:
                 output= ALU.resta(reg_8[A],reg_8[target]);
                 if(output<0){F[S]=0;};
                 break;
-                //numero
+            //numero
             case 29:
                 output= ALU.resta(reg_8[A],target);
                 if(output<0){F[S]=0;};
                 break;
             //and
             case 3:
-                output= ALU.and(this.reg_8[A],mem.get(target));
+                output= ALU.and(this.reg_8[A],Memoria.get(target));
                 break;
             //registros
             case 4:
                 output= ALU.and(reg_8[A], reg_8[target]);
                 break;
             //or
-                //memoria
+            //memoria
             case 1:
-                output= ALU.or(this.reg_8[A],mem.get(target));
+                output= ALU.or(this.reg_8[A],Memoria.get(target));
                 break;
-                //registros
+            //registros
             case 2:
                 output= ALU.or(reg_8[A], reg_8[target]);
                 break;
             //xor
             //memoria
             case 5:
-                output= ALU.xor(this.reg_8[A],mem.get(target));
+                output= ALU.xor(this.reg_8[A],Memoria.get(target));
                 break;
             //registros
             case 6:
                 output= ALU.xor(reg_8[A], reg_8[target]);
                 break;
             //cp
-                //registros
+            //registros
             case 7:
                 if(reg_8[A]<reg_8[target]){F[S]=1;F[Z]=0;F[Ha]=0;F[N]=1;F[PV]=1;F[Ca]=1;}
                 else if (reg_8[A]==reg_8[target]){F[Z]=1;F[S]=0;F[Ha]=0;F[N]=1;F[PV]=0;F[Ca]=0;}
                 else{F[S]=0;F[Z]=0;F[Ha]=0;F[N]=1;F[PV]=0;F[Ca]=0;}
                 break;
-                //memoria
+            //memoria
             case 8:
-                if(reg_8[A]<mem.get(target)){F[S]=1;F[Z]=0;F[Ha]=0;F[N]=1;F[PV]=1;F[Ca]=1;}
-                else if (reg_8[A]==mem.get(target)){F[Z]=1;F[S]=0;F[Ha]=0;F[N]=1;F[PV]=0;F[Ca]=0;}
+                if(reg_8[A]<Memoria.get(target)){F[S]=1;F[Z]=0;F[Ha]=0;F[N]=1;F[PV]=1;F[Ca]=1;}
+                else if (reg_8[A]==Memoria.get(target)){F[Z]=1;F[S]=0;F[Ha]=0;F[N]=1;F[PV]=0;F[Ca]=0;}
                 else{F[S]=0;F[Z]=0;F[Ha]=0;F[N]=1;F[PV]=0;F[Ca]=0;}
                 break;
             //inc
-                //registro
+            //registro
             case 9:
                 F[N]=0;
                 if(reg_8[target]<0){output=reg_8[target]++;F[S]=1;}
                 else if(reg_8[target]==127){output=reg_8[target]++;F[PV]=1;}
                 break;
-               //memoria
+            //memoria
             case 10:
                 F[N]=0;
-                if(mem.get(target)<0){output=mem.get(target)+1;F[S]=1;}
-                else if(mem.get(target)==127){output=mem.get(target)+1;F[PV]=1;}
+                if(Memoria.get(target)<0){output=Memoria.get(target)+1;F[S]=1;}
+                else if(Memoria.get(target)==127){output=Memoria.get(target)+1;F[PV]=1;}
                 break;
             //dec
-                //registro
+            //registro
             case 11:
                 F[N]=0;
                 if(reg_8[target]<0){output=reg_8[target]--;F[S]=1;}
                 else if(reg_8[target]==127){output=reg_8[target]++;F[PV]=1;}
                 break;
-                //memoria
+            //memoria
             case 12:
                 F[N]=0;
-                if(mem.get(target)<0){output=mem.get(target)-1;F[S]=1;}
-                else if(mem.get(target)==127){output=mem.get(target)+1;F[PV]=1;}
+                if(Memoria.get(target)<0){output=Memoria.get(target)-1;F[S]=1;}
+                else if(Memoria.get(target)==127){output=Memoria.get(target)+1;F[PV]=1;}
                 break;
             //cpl
             case 13:
@@ -208,8 +225,8 @@ public class Procesador {
                 char c  = aux.charAt(aux.length()-1);
                 String rotado= c+aux.substring(0,aux.length()-1);
                 reg_8[A]=output=Integer.parseInt(rotado,2);}
-                break;
-             //rrca
+            break;
+            //rrca
             case 19:
                 output=ALU.sl(reg_8[A]);
                 reg_8[A]=output;
@@ -221,7 +238,7 @@ public class Procesador {
                 char c = aux.charAt(0);
                 String rotado= aux.substring(1)+c;
                 reg_8[A]=output=Integer.parseInt(rotado,2);}
-                break;
+            break;
             //rlc
             case 21:
                 output=ALU.sr(reg_8[target]);
@@ -251,19 +268,21 @@ public class Procesador {
             case 31:
                 if (reg_8[A] > 0){
                     reg_16[PC] = target;}
-                    break;
+                break;
 
             //ld
-                //registro numero
+            //registro numero
+            case 32:
+                reg_8[target]= target2;
+                //registro memoria
+            case 34:
+                reg_8[target]=Memoria.get(target2);
+                break;
+            //registro registro
             case 33:
                 reg_8[target]=reg_8[target2];
                 break;
-                //registro memoria
-            case 34:
-                reg_8[target]=mem.get(target2);
-                break;
-                //registro registro
-            case 32:
+
 
             //push
             //pop
