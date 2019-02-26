@@ -1,6 +1,7 @@
 package z80;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Processor {
 	// 8 bits
@@ -38,17 +39,23 @@ public class Processor {
 		this.ir = new IR();
 		for (int i = 0; i < 14; i++)
 			this.getReg_8bit()[i] = 0;
-		
-		for (int i = 0; i < 4; i++) 
-			this.getReg_16bit()[i] = 0;		
+
+		for (int i = 0; i < 4; i++)
+			this.getReg_16bit()[i] = 0;
 		this.getReg_16bit()[PC] = mem.getOrg();
 	}
 
 	public void runProgram() throws IOException {
-		while (!this.isEnd()) {			
+		while (!this.isEnd()) {
 			this.fetch();
-			this.execute();			
+			this.execute();
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "Processor [flags=" + Arrays.toString(flags) + ", carry=" + carry + ", sig=" + sig + ", zero=" + zero
+				+ ", pv=" + pv + ", aux_carry=" + aux_carry + "]";
 	}
 
 	public void fetch() {
@@ -437,6 +444,14 @@ public class Processor {
 
 	public boolean isEnd() {
 		return end;
+	}
+
+	public boolean[] getFlags() {
+		return flags;
+	}
+
+	public void setFlags(boolean[] flags) {
+		this.flags = flags;
 	}
 
 	public void setEnd(boolean end) {

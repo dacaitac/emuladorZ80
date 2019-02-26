@@ -21,16 +21,5 @@ public class Main {
 		main.setVisible(true);
 		main.setBounds(200,200,940,650);
 		
-//		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-//	    System.out.println("-- Z80 PROCESSOR EMULATOR --");
-//	    System.out.println("Load program: ");
-//	    String archivo = br.readLine();
-//	    Assembler assembler = new Assembler();
-//	    memory =  new Memory();
-//	    memory.setMemory(assembler.assemble(archivo));	    
-//	    //"programs/fibo.txt"
-//	    Processor z80 = new Processor(memory);
-//	    z80.runProgram();
-//	    br.close();
 	}
 }

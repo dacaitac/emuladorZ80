@@ -3,7 +3,7 @@ ORG 2048H
 # contador
 LD B,00H
 # limite num - 2
-LD C,07H
+LD C,17H
 # reg aux
 LD D,00H
 LD E,01H

@@ -3,10 +3,11 @@ public class Main {
     Assembler a = new Assembler();
     LinkerLoader ll = new LinkerLoader();
     Memory m = new Memory();
-    // Processor p = null;
+    Processor p = null;
     try {
-      a.assemble("programs/suma.txt");
+      a.assemble("programs/fibo.txt");
       ll.chargeProgram("relocatableCode.txt", m);
+      p.runProgram();
     } catch(Exception e) {}
   }
 }

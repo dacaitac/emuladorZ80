@@ -114,7 +114,7 @@ public class MainGui extends JFrame {
 				}				
 				Computer computer = new Computer(memory);
 				computer.setVisible(true);
-				computer.setBounds(200, 200, 1150, 530);
+				computer.setBounds(200, 200, 900, 530);
 			}
 		});
 		button_1.setForeground(Color.WHITE);

@@ -40,8 +40,8 @@ public class Computer extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 
-//	private int size = 100;
-	private int size = 65535;
+	private int size = 100;
+//	private int size = 65535;
 	// private String datas[][] = new String[memory.getMemorySize()][2];
 	private String datas[][] = new String[size][2];
 	private String column[] = { "Posición", "Instrucción" };
@@ -49,8 +49,9 @@ public class Computer extends JFrame {
 //	public Computer(Memory memory) {
 	public Computer(Memory memory) {
 		processor = new Processor(memory);
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1153, 532);
+		setBounds(100, 100, 897, 532);
 		contentPane = new JPanel();
 		getContentPane().setBackground(new Color(177, 178, 176));
 		contentPane.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
@@ -59,16 +60,17 @@ public class Computer extends JFrame {
 
 		for (int i = 0; i < size; i++) {
 			datas[i][0] = Integer.toHexString(i).toUpperCase();
-			datas[i][1] = memory.get(i) + "";
+			datas[i][1] = String.format("%16s", Integer.toBinaryString(memory.get(i))).replace(" ", "0");
 		}
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(674, 46, 432, 417);
+		scrollPane.setBounds(674, 46, 202, 417);
 		contentPane.add(scrollPane);
 		table = new JTable(datas, column);
 		table.setShowVerticalLines(false);
 		table.setShowHorizontalLines(false);
 		table.getColumnModel().getColumn(0).setMaxWidth(50);
+		table.getColumnModel().getColumn(1).setMaxWidth(140);
 		scrollPane.setViewportView(table);
 
 		JLabel label = new JLabel("Memoria");
@@ -107,12 +109,6 @@ public class Computer extends JFrame {
 		label_10.setFont(new Font("Ubuntu", Font.BOLD, 17));
 		label_10.setBounds(22, 90, 102, 23);
 		panel.add(label_10);
-
-		JLabel lblAlu = new JLabel("F (Flags)\n");
-		lblAlu.setForeground(new Color(70, 107, 63));
-		lblAlu.setFont(new Font("Ubuntu", Font.BOLD, 17));
-		lblAlu.setBounds(23, 267, 132, 23);
-		panel.add(lblAlu);
 
 		JLabel lblC = new JLabel("C");
 		lblC.setFont(new Font("Ubuntu", Font.BOLD, 16));
@@ -209,13 +205,28 @@ public class Computer extends JFrame {
 		label_17.setFont(new Font("Ubuntu", Font.BOLD, 17));
 		label_17.setBounds(340, 249, 178, 23);
 		panel.add(label_17);
+		
+		JLabel lblOutputport = new JLabel("OUTPUT(PORT)");
+		lblOutputport.setFont(new Font("Ubuntu", Font.BOLD, 16));
+		lblOutputport.setBounds(72, 249, 156, 23);
+		panel.add(lblOutputport);
+		
+		JLabel label_1 = new JLabel("00000000");
+		label_1.setFont(new Font("Ubuntu", Font.BOLD, 17));
+		label_1.setBounds(32, 270, 88, 23);
+		panel.add(label_1);
+		
+		JLabel label_3 = new JLabel("00000000");
+		label_3.setFont(new Font("Ubuntu", Font.BOLD, 17));
+		label_3.setBounds(143, 270, 178, 23);
+		panel.add(label_3);
 
 		JButton btnProcesar = new JButton("Procesar");
 		btnProcesar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (!processor.isEnd()) {
 					int[] reg = processor.getReg_16bit();
-
+					System.out.println(processor.toString());
 					table.changeSelection(reg[0], 2, false, false);
 
 					try {
@@ -242,6 +253,10 @@ public class Computer extends JFrame {
 					label_14.setText(String.format("%16s", Integer.toBinaryString(reg_16bit[SP])).replace(" ", "0"));
 					label_17.setText(String.format("%16s", Integer.toBinaryString(reg_16bit[PC])).replace(" ", "0"));
 				}
+				if(processor.isEnd()) {
+					label_1.setText(String.format("%8s", Integer.toBinaryString(reg_8bit[A])).replace(" ", "0"));
+					label_3.setText(reg_8bit[A]+"");
+				}
 			}
 		});
 		btnProcesar.setForeground(Color.WHITE);
@@ -263,21 +278,31 @@ public class Computer extends JFrame {
 						setReg_16bit(processor.getReg_16bit());
 						setReg_8bit(processor.getReg_8bit());
 
-						label_10.setText(reg_8bit[B] + "");
-						label_2.setText(reg_8bit[C] + "");
-						label_5.setText(reg_8bit[D] + "");
-						label_7.setText(reg_8bit[E] + "");
-						label_11.setText(reg_8bit[H] + "");
-						label_13.setText(reg_8bit[L] + "");
-
-						label_6.setText(reg_16bit[IX] + "");
-						label_9.setText(reg_16bit[IY] + "");
-						label_14.setText(reg_16bit[SP] + "");
-						label_17.setText(reg_16bit[PC] + "");
+						// Registros 8 bits
+						label_10.setText(String.format("%8s", Integer.toBinaryString(reg_8bit[B])).replace(" ", "0"));
+						label_2.setText(String.format("%8s", Integer.toBinaryString(reg_8bit[C])).replace(" ", "0"));
+						label_5.setText(String.format("%8s", Integer.toBinaryString(reg_8bit[D])).replace(" ", "0"));
+						label_7.setText(String.format("%8s", Integer.toBinaryString(reg_8bit[E])).replace(" ", "0"));
+						label_11.setText(String.format("%8s", Integer.toBinaryString(reg_8bit[H])).replace(" ", "0"));
+						label_13.setText(String.format("%8s", Integer.toBinaryString(reg_8bit[L])).replace(" ", "0"));
+						label_4.setText(String.format("%8s", Integer.toBinaryString(reg_8bit[A])).replace(" ", "0"));
+						
+						//Registros 16 bits
+						label_6.setText(String.format("%16s", Integer.toBinaryString(reg_16bit[IX])).replace(" ", "0"));
+						label_9.setText(String.format("%16s", Integer.toBinaryString(reg_16bit[IY])).replace(" ", "0"));
+						label_14.setText(String.format("%16s", Integer.toBinaryString(reg_16bit[SP])).replace(" ", "0"));
+						label_17.setText(String.format("%16s", Integer.toBinaryString(reg_16bit[PC])).replace(" ", "0"));
+						
+						//Flags
+						
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+				}
+				if(processor.isEnd()) {
+					label_1.setText(String.format("%8s", Integer.toBinaryString(reg_8bit[A])).replace(" ", "0"));
+					label_3.setText(reg_8bit[A]+"");
 				}
 			}
 		});
@@ -303,5 +328,4 @@ public class Computer extends JFrame {
 	public void setReg_8bit(int[] reg_8bit) {
 		this.reg_8bit = reg_8bit;
 	}
-
 }

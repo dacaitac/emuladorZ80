@@ -76,10 +76,7 @@ public class Assembler {
 		return Integer.parseInt(address.substring(0, size - 1), 16);
 	}
 
-	private void chargeLabels(String[] file) throws FileNotFoundException, IOException {
-//    String input = null;
-//    FileReader f = new FileReader(file);
-//    BufferedReader b = new BufferedReader(f);    
+	private void chargeLabels(String[] file) throws FileNotFoundException, IOException {    
 		String[] line = null;
 		int auxPointer = 0;
 
@@ -630,4 +627,32 @@ public class Assembler {
 	public void setOrgPointer(int orgPointer) {
 		this.orgPointer = orgPointer;
 	}
+
 }
+
+//  opcode      op 1              op 2
+//  00000000 | 00000000 00000000 | 00000000 00000000
+
+/*
+ * 0 add (with reg 8 bits) accum 1 add (with num 8 bits) accum 2 add (with mem 8
+ * bits) accum 3 sub (with reg 8 bits) accum 4 sub (with num 8 bits) accum 5 sub
+ * (with mem 8 bits) accum 6 increment1 (with reg 8 bits) 7 increment1 (with reg
+ * 16 bits) 8 increment1 (with mem 8 bits) 9 decrement1 (with reg 8 bits) 10
+ * decrement1 (with reg 16 bits) 11 decrement1 (with mem 8 bits) 12 complement1
+ * (only acc) 13 complement2 (only acc) 14 load (with reg 8 - reg 8) 15 load
+ * (with reg 16 - reg 16) 16 load (with reg 8 - mem 8) 17 load (with mem 8 - reg
+ * 8) 18 load (with reg 8 - num 8) 19 load (with mem 8 - num 8) 20 load (with
+ * mem 8 - mem 8) 21 Input (only acc) 22 Output (only acc) 23 AND (with reg 8
+ * bits) acc 24 AND (with mem 8 bits) acc 25 AND (with num 8 bits) acc 26 OR
+ * (with reg 8 bits) acc 27 OR (with mem bits) acc 28 OR (with num 8 bits) acc
+ * 29 XOR (with reg 8 bits) acc 30 XOR (with mem bits) acc 31 XOR (with num 8
+ * bits) acc 32 comparation (with reg 8 bits) acc 33 comparation (with num 8
+ * bits) acc 34 comparation (with mem 8 bits) acc 35 rigthRotation (with reg 8
+ * bits) 36 rigthRotation (with reg 16 bits) 37 rigthRotation (with mem 8 bits)
+ * 38 leftRotation (with reg 8 bits) 39 leftRotation (with reg 16 bits) 40
+ * leftRotation (with mem 8 bits) 41 checkBit (with reg 8 bits) modify z-flag 42
+ * checkBit (with mem 8 bits) modify z-flag 43 setBit (with reg 8 bits) 44
+ * setBit (with mem 8 bits) 45 resetBit (with reg 8 bits) 46 resetBit (with mem
+ * 8 bits) 47 jump C (acc > 0) 48 jump Z (acc == 0) 49 jump (is a memory
+ * address)
+ */
